@@ -213,37 +213,37 @@ df = pd.read_csv("Data/Raw/olist_orders_dataset.csv")
 #             "order_delivered_customer_date"
 #     ]].isnull().sum())
 
-missing_approval_by_status=(df.groupby("order_status")
-    ["order_approved_at"].apply(
-        lambda x:x.isnull().sum()
-    )
-)
-print(missing_approval_by_status)
+# missing_approval_by_status=(df.groupby("order_status")
+#     ["order_approved_at"].apply(
+#         lambda x:x.isnull().sum()
+#     )
+# )
+# print(missing_approval_by_status)
 
-delivered_missing_approval=df[(df["order_status"]=="delivered")&(df["order_approved_at"].isnull())]
-print(
-    delivered_missing_approval[
-        [
-            "order_id",
-            "order_purchase_timestamp",
-            "order_approved_at",
-            "order_delivered_carrier_date",
-            "order_delivered_customer_date"
-        ]
-    ].to_string(index=False)
-)
+# delivered_missing_approval=df[(df["order_status"]=="delivered")&(df["order_approved_at"].isnull())]
+# print(
+#     delivered_missing_approval[
+#         [
+#             "order_id",
+#             "order_purchase_timestamp",
+#             "order_approved_at",
+#             "order_delivered_carrier_date",
+#             "order_delivered_customer_date"
+#         ]
+#     ].to_string(index=False)
+# )
 
-payments_df = pd.read_csv(
-    "Data/Raw/olist_order_payments_dataset.csv"
-)
+# payments_df = pd.read_csv(
+#     "Data/Raw/olist_order_payments_dataset.csv"
+# )
 
-print(payments_df.head())
+# print(payments_df.head())
 
-payments_record_for_14=payments_df[
-    payments_df["order_id"].isin(
-        delivered_missing_approval["order_id"])
-]
-print(payments_record_for_14)
+# payments_record_for_14=payments_df[
+#     payments_df["order_id"].isin(
+#         delivered_missing_approval["order_id"])
+# ]
+# print(payments_record_for_14)
 
 # Data Quality Observation:
 # 14 delivered orders have missing order_approved_at timestamps.
@@ -505,94 +505,94 @@ print(payments_record_for_14)
 # One record has an exceptionally large difference of approximately 171 days.
 # Original timestamps are preserved without guessing replacement values.
 
-invalid_approval_delivery_dates = df[
-    df["order_delivered_customer_date"] <
-    df["order_approved_at"]
-]
-
-print(
-    "Customer delivery before approval:",
-    len(invalid_approval_delivery_dates)
-)
-invalid_approval_delivery_dates["order_approved_at"] = pd.to_datetime(
-    invalid_approval_delivery_dates["order_approved_at"]
-)
-
-invalid_approval_delivery_dates["order_delivered_customer_date"] = pd.to_datetime(
-    invalid_approval_delivery_dates["order_delivered_customer_date"])
-
-invalid_approval_delivery_dates = (
-    invalid_approval_delivery_dates.copy()
-)
-
-invalid_approval_delivery_dates["approval_delivery_gap"] = (
-    invalid_approval_delivery_dates["order_approved_at"] -
-    invalid_approval_delivery_dates["order_delivered_customer_date"]
-)
+# invalid_approval_delivery_dates = df[
+#     df["order_delivered_customer_date"] <
+#     df["order_approved_at"]
+# ]
 
 # print(
-#     invalid_approval_delivery_dates[
-#         "approval_delivery_gap"
+#     "Customer delivery before approval:",
+#     len(invalid_approval_delivery_dates)
+# )
+# invalid_approval_delivery_dates["order_approved_at"] = pd.to_datetime(
+#     invalid_approval_delivery_dates["order_approved_at"]
+# )
+
+# invalid_approval_delivery_dates["order_delivered_customer_date"] = pd.to_datetime(
+#     invalid_approval_delivery_dates["order_delivered_customer_date"])
+
+# invalid_approval_delivery_dates = (
+#     invalid_approval_delivery_dates.copy()
+# )
+
+# invalid_approval_delivery_dates["approval_delivery_gap"] = (
+#     invalid_approval_delivery_dates["order_approved_at"] -
+#     invalid_approval_delivery_dates["order_delivered_customer_date"]
+# )
+
+# # print(
+# #     invalid_approval_delivery_dates[
+# #         "approval_delivery_gap"
+# #     ].describe()
+# # )
+# # Data Quality Observation:
+# # 61 orders have customer delivery timestamps before approval timestamps.
+# # Average difference is approximately 1 day and 15 hours.
+# # Maximum difference is approximately 6 days and 23 hours.
+# # These records violate the expected order timeline.
+# # Original timestamps are preserved without guessing replacement values.
+
+# print(
+#     "Missing approval timestamps in these records:",
+#     invalid_approval_delivery_dates["order_approved_at"].isnull().sum()
+# )
+
+# # Additional Validation:
+# # All 61 records have non-missing approval timestamps.
+# # All 61 records have non-missing customer delivery timestamps.
+# # Therefore, the chronological inconsistency is not caused by missing values.
+# invalid_approval_estimated_dates = df[
+#     df["order_approved_at"] >
+#     df["order_estimated_delivery_date"]
+# ]
+
+# print(
+#     "Approval date after estimated delivery:",
+#     len(invalid_approval_estimated_dates)
+# )
+# print(
+#     invalid_approval_estimated_dates[
+#         [
+#             "order_id",
+#             "order_status",
+#             "order_purchase_timestamp",
+#             "order_approved_at",
+#             "order_delivered_customer_date",
+#             "order_estimated_delivery_date"
+#         ]
+#     ].to_string(index=False)
+# )
+# invalid_approval_estimated_dates["order_approved_at"] = pd.to_datetime(
+#     invalid_approval_estimated_dates["order_approved_at"]
+# )
+
+# invalid_approval_estimated_dates["order_estimated_delivery_date"] = pd.to_datetime(
+#     invalid_approval_estimated_dates["order_estimated_delivery_date"])
+
+# invalid_approval_estimated_dates = (
+#     invalid_approval_estimated_dates.copy()
+# )
+
+# invalid_approval_estimated_dates["approval_estimated_gap"] = (
+#     invalid_approval_estimated_dates["order_approved_at"] -
+#     invalid_approval_estimated_dates["order_estimated_delivery_date"]
+# )
+
+# print(
+#     invalid_approval_estimated_dates[
+#         "approval_estimated_gap"
 #     ].describe()
 # )
-# Data Quality Observation:
-# 61 orders have customer delivery timestamps before approval timestamps.
-# Average difference is approximately 1 day and 15 hours.
-# Maximum difference is approximately 6 days and 23 hours.
-# These records violate the expected order timeline.
-# Original timestamps are preserved without guessing replacement values.
-
-print(
-    "Missing approval timestamps in these records:",
-    invalid_approval_delivery_dates["order_approved_at"].isnull().sum()
-)
-
-# Additional Validation:
-# All 61 records have non-missing approval timestamps.
-# All 61 records have non-missing customer delivery timestamps.
-# Therefore, the chronological inconsistency is not caused by missing values.
-invalid_approval_estimated_dates = df[
-    df["order_approved_at"] >
-    df["order_estimated_delivery_date"]
-]
-
-print(
-    "Approval date after estimated delivery:",
-    len(invalid_approval_estimated_dates)
-)
-print(
-    invalid_approval_estimated_dates[
-        [
-            "order_id",
-            "order_status",
-            "order_purchase_timestamp",
-            "order_approved_at",
-            "order_delivered_customer_date",
-            "order_estimated_delivery_date"
-        ]
-    ].to_string(index=False)
-)
-invalid_approval_estimated_dates["order_approved_at"] = pd.to_datetime(
-    invalid_approval_estimated_dates["order_approved_at"]
-)
-
-invalid_approval_estimated_dates["order_estimated_delivery_date"] = pd.to_datetime(
-    invalid_approval_estimated_dates["order_estimated_delivery_date"])
-
-invalid_approval_estimated_dates = (
-    invalid_approval_estimated_dates.copy()
-)
-
-invalid_approval_estimated_dates["approval_estimated_gap"] = (
-    invalid_approval_estimated_dates["order_approved_at"] -
-    invalid_approval_estimated_dates["order_estimated_delivery_date"]
-)
-
-print(
-    invalid_approval_estimated_dates[
-        "approval_estimated_gap"
-    ].describe()
-)
 
 # Data Quality Observation:
 # 12 orders have approval timestamps later than estimated delivery dates.
@@ -601,3 +601,155 @@ print(
 # These records have chronologically inconsistent timestamps.
 # Original timestamps are preserved because the correct values are unknown.
 
+
+
+# print(df["order_estimated_delivery_date"].dtype)
+# print(df["order_purchase_timestamp"].dtype)
+
+# df["order_estimated_delivery_date"] = pd.to_datetime(
+#     df["order_estimated_delivery_date"]
+# )
+
+# df["order_purchase_timestamp"] = pd.to_datetime(
+#     df["order_purchase_timestamp"]
+# )
+
+# invalid_estimated_before_purchase = df[
+#     df["order_estimated_delivery_date"].dt.date <
+#     df["order_purchase_timestamp"].dt.date
+# ]
+
+# print(
+#     "Estimated delivery before purchase:",
+#     len(invalid_estimated_before_purchase)
+# )
+
+# Data Quality Observation:
+# No orders have estimated delivery dates earlier than purchase dates.
+# All available estimated delivery dates follow the purchase date.
+
+
+# print(df.columns.tolist())
+
+
+
+# df["order_delivered_customer_date"] = pd.to_datetime(
+#     df["order_delivered_customer_date"],
+#     errors="coerce"
+# )
+
+# df["order_purchase_timestamp"] = pd.to_datetime(
+#     df["order_purchase_timestamp"],
+#     errors="coerce"
+# )
+
+# print(df["order_delivered_customer_date"].dtype)
+# print(df["order_purchase_timestamp"].dtype)
+
+# df["delivery_time"] = (
+#     df["order_delivered_customer_date"] -
+#     df["order_purchase_timestamp"]
+# ).dt.days
+# print(df["delivery_time"])
+
+# negative_delivery_time = df[
+#     df["delivery_time"] < 0
+# ]
+
+# print("Negative delivery time records:", len(negative_delivery_time))
+
+# Data Quality Observation:
+# No orders have negative delivery times.
+# All available customer delivery dates are on or after purchase dates.
+
+# print(df["delivery_time"].describe())
+
+# Data Quality Observation:
+# Average delivery time is approximately 12.09 days.
+# Median delivery time is 10 days.
+# Maximum delivery time is 209 days.
+# 5,025 records (5.21%) are potential outliers based on the IQR method.
+# Outliers are retained because they may represent genuine delivery delays.
+
+#________________cleaning of data______________
+# Create a copy of the original Orders DataFrame
+orders_cleaned = df.copy()
+
+print("Original dataset shape:", df.shape)
+print("Cleaned dataset shape:", orders_cleaned.shape)
+
+# Identify date columns
+date_columns = [
+    "order_purchase_timestamp",
+    "order_approved_at",
+    "order_delivered_carrier_date",
+    "order_delivered_customer_date",
+    "order_estimated_delivery_date"
+]
+
+# Convert date columns into datetime format
+for column in date_columns:
+    orders_cleaned[column] = pd.to_datetime(
+        orders_cleaned[column],
+        errors="coerce"
+    )
+
+# Check data types
+print(orders_cleaned[date_columns].dtypes)
+
+# Calculate missing values
+cleaned_missing_values = orders_cleaned.isnull().sum()
+
+# Calculate missing percentages
+cleaned_missing_percentage = (
+    cleaned_missing_values / len(orders_cleaned)
+) * 100
+
+# Create a summary table
+cleaning_missing_summary = pd.DataFrame({
+    "Missing Count": cleaned_missing_values,
+    "Missing Percentage": cleaned_missing_percentage.round(2)
+})
+
+print(cleaning_missing_summary)
+
+# Check duplicate rows
+print(
+    "Duplicate rows:",
+    orders_cleaned.duplicated().sum()
+)
+
+# Check duplicate order IDs
+print(
+    "Duplicate order IDs:",
+    orders_cleaned["order_id"].duplicated().sum()
+)
+
+# Check unique order statuses
+print(orders_cleaned["order_status"].unique())
+
+# Count records for each status
+print("\nOrder Status Counts:")
+print(orders_cleaned["order_status"].value_counts())
+
+# Save cleaned Orders dataset
+orders_cleaned.to_csv(
+    "Data/cleaned/orders_cleaned.csv",
+    index=False
+)
+
+print("Cleaned Orders dataset saved successfully!")
+
+# Load the saved cleaned dataset
+orders_check = pd.read_csv(
+    "Data/cleaned/orders_cleaned.csv"
+)
+
+# Verify the dataset
+print("Dataset shape:", orders_check.shape)
+
+print("\nFirst 5 records:")
+print(orders_check.head())
+
+print("\nMissing values:")
+print(orders_check.isnull().sum())
