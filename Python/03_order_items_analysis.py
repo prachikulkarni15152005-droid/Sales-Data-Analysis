@@ -858,3 +858,17 @@ items_check = pd.read_csv(
 
 print("Saved Dataset Shape:", items_check.shape)
 print(items_check.dtypes)
+#category_transaltion dataset copy
+category_translation_cleaned = category_translation_df.copy()
+
+category_translation_cleaned.to_csv(
+    "Data/cleaned/category_translation_cleaned.csv",
+    index=False
+)
+#verifying the datset
+translation_check = pd.read_csv(
+    "Data/cleaned/category_translation_cleaned.csv"
+)
+
+print("Saved Shape:", translation_check.shape)
+print(translation_check.head())
