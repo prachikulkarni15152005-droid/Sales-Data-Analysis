@@ -1,0 +1,13 @@
+---note these psql commands foe importing the csv files into sql database tables--
+
+\encoding UTF8
+
+\copy orders FROM 'Data/cleaned/orders_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy payments FROM 'Data/cleaned/payments_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy order_items FROM 'Data/cleaned/order_items_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy products FROM 'Data/cleaned/products_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy customers FROM 'Data/cleaned/customers_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy sellers FROM 'Data/cleaned/sellers_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy order_reviews FROM 'Data/cleaned/reviews_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy category_translation FROM 'Data/cleaned/category_translation_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy geolocation FROM 'Data/cleaned/geolocation_cleaned.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
