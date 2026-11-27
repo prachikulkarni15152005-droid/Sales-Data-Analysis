@@ -1,19 +1,21 @@
-
-# Raw datasets
-Data/Raw/
-
-# Temporary Python files
+# Python cache files
 __pycache__/
 *.py[cod]
-tempCodeRunnerFile.py
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
 
 # Virtual environments
 venv/
 .venv/
 
-# System files
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment and secret files
+.env
+
+# Temporary files
+*.log
+*.tmp
+
+# Operating system files
 .DS_Store
 Thumbs.db
